@@ -14,7 +14,17 @@ class Counter extends React.Component {
 
     componentDidMount() {
         this.renderCounter();
+        this.intervalVar = setInterval(this.tick.bind(this), 500);
     }
+
+    componentWillUnmount() {
+        clearInterval(this.intervalVar);
+    }
+
+    componentDidUpdate() {
+        this.renderCounter();
+    }
+    
 
     renderCounter() {
         if( this.props.type === 'text') {
@@ -27,6 +37,7 @@ class Counter extends React.Component {
     renderTextCounter() {
         let canvas = this.counterCanvasRef.current;
         let ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.font = '30px serif';
         ctx.fillText(`${this.state.mins} : ${this.state.secs}`, 50, 90);
     }
@@ -35,8 +46,17 @@ class Counter extends React.Component {
 
     }
 
+    tick() {
+        const secs = Math.random();
+        console.log(secs);
+        this.setState(
+            {
+                secs: secs
+            }
+        );
+    }
 
-    
+
     render() {
         return (
             <div>
