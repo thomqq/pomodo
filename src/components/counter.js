@@ -46,15 +46,40 @@ class Counter extends React.Component {
 
     }
 
-    tick() {
-        const secs = Math.random();
-        console.log(secs);
-        this.setState(
-            {
-                secs: secs
+    increaseTimer(mins, secs) {
+        let extraMin = 0;
+        let newSecs = Number(secs) + 1;
+        if( newSecs > 59) {
+            newSecs = 0;
+            extraMin = 1;
+        }
+        let newMins = Number(mins) + extraMin;
+        
+        if(newMins < 10 ) {
+            newMins = "0" + newMins;
+        }
+
+        if(newSecs < 10 ) {
+            newSecs = "0" + newSecs;
+        }
+        
+        return( {
+            mins: newMins,
+            secs: newSecs
             }
         );
     }
+
+    tick() {
+        const newValue = this.increaseTimer(this.state.mins, this.state.secs);
+        this.setState(
+            {
+                mins: newValue.mins,
+                secs: newValue.secs
+            }
+        );
+    }
+
 
 
     render() {
