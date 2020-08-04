@@ -13,6 +13,7 @@ class Counter extends React.Component {
       }
 
     componentDidMount() {
+        this.resetStoredTime();
         this.renderCounter();
         this.intervalVar = setInterval(this.tick.bind(this), 500);
     }
@@ -25,7 +26,17 @@ class Counter extends React.Component {
         this.renderCounter();
     }
     
-
+    resetStoredTime() {
+        let now = new Date();
+        this.setState(
+            {
+                date: now,
+                mins: '00',
+                secs: '00'
+            }
+        );
+    }
+    
     renderCounter() {
         if( this.props.type === 'text') {
             this.renderTextCounter();
@@ -46,41 +57,27 @@ class Counter extends React.Component {
 
     }
 
-    increaseTimer(mins, secs) {
-        let extraMin = 0;
-        let newSecs = Number(secs) + 1;
-        if( newSecs > 59) {
-            newSecs = 0;
-            extraMin = 1;
-        }
-        let newMins = Number(mins) + extraMin;
-        
-        if(newMins < 10 ) {
-            newMins = "0" + newMins;
-        }
-
-        if(newSecs < 10 ) {
-            newSecs = "0" + newSecs;
-        }
-        
-        return( {
-            mins: newMins,
-            secs: newSecs
-            }
-        );
-    }
-
     tick() {
-        const newValue = this.increaseTimer(this.state.mins, this.state.secs);
+        let now = new Date();
+        let diffDate = new Date( now - this.state.date );
+        let newMins = this.addLeadingZero(diffDate.getMinutes());
+        let newSecs = this.addLeadingZero(diffDate.getSeconds());
         this.setState(
             {
-                mins: newValue.mins,
-                secs: newValue.secs
+                mins: newMins,
+                secs: newSecs
             }
         );
     }
 
-
+    addLeadingZero(number) {
+        let result = "";
+        if( number < 10 ) {
+            result = "0"
+        }
+        result += number;
+        return result;
+    }
 
     render() {
         return (
